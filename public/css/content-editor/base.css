@@ -1,0 +1,8 @@
+
+
+#content-editor > canvas:first-of-type{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1; /* Places the canvas behind all other elements */
+}

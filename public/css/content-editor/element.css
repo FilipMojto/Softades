@@ -1,0 +1,39 @@
+
+
+.softades-content-editor-element, .usecase-bubble{
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;	
+}
+
+.softades-content-editor-element > textarea:first-of-type, .usecase-bubble > textarea:first-of-type {
+	background-color: inherit;
+	border: none;
+	outline: none;
+	color: black;
+	flex: 1;
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	resize: none;
+}
+
+
+.usecase-bubble {
+	border-radius: 20px;
+	padding: 7px;
+	background-color: red;
+	resize: none;
+	overflow: hidden;
+	position: absolute;
+	cursor: grab;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	min-width: 100px;
+}
+
+.usecase-bubble:active {
+	cursor: grabbing;
+}
+
