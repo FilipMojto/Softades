@@ -5,9 +5,23 @@ const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const wrappables = document.querySelectorAll<HTMLTextAreaElement>(".wrappable");
-const draggables = document.querySelectorAll<HTMLElement>(".draggable");
-const connectables = document.querySelectorAll<HTMLElement>(".connectable");
+const wrappables = document.querySelectorAll<HTMLTextAreaElement>(".content-element > textarea.wrappable");
+const draggables = document.querySelectorAll<HTMLElement>(".content-element.draggable");
+const connectables = document.querySelectorAll<HTMLElement>(".content-element.connectable");
+
+const useCaseBubbles = document.querySelectorAll<HTMLElement>(".content-element.usecase-bubble");
+
+useCaseBubbles.forEach(bubble => {
+  bubble.setAttribute("title", "Use Case");
+})
+
+const associationArrows = document.querySelectorAll<HTMLElement>(".content-element.association-arrow");
+
+associationArrows.forEach(arrow => {
+  arrow.setAttribute("title", "Association");
+})
+
+
 
 let isDragging: boolean = false;
 let currentDraggable: HTMLElement | null = null;
@@ -60,6 +74,7 @@ connectables.forEach((connectable) => {
 draggables.forEach((draggable) => {
   draggable.addEventListener("mousedown", function (event: MouseEvent) {
     if ((event.target as HTMLElement).tagName.toLowerCase() === "textarea") return;
+
 
     isDragging = true;
     currentDraggable = draggable;
