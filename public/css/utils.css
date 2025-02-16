@@ -1,0 +1,8 @@
+
+.template > *{
+	pointer-events: none;
+}
+
+.template:hover{
+	transform: scale(1.02);
+}

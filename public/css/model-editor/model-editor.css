@@ -1,0 +1,30 @@
+
+#model-editor{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+#tool-panel{
+	border-right: 2px outset rgb(172, 172, 172);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px;
+}
+
+#tool-panel > *{
+	max-height: 120px;
+	width: fit-content;
+}
+
+#workspace{
+	position: relative;
+	padding: 0;
+	margin: 0;
+}
+
+#lal{
+	/* z-index: 30; */
+	background-color: red;
+}
