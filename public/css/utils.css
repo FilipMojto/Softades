@@ -4,5 +4,6 @@
 }
 
 .template:hover{
-	transform: scale(1.02);
+	transform: scale(1.05); /* Slightly enlarge the element */
+  box-shadow: 8px 8px 15px 0px rgba(113, 113, 113, 0.85); /* Enhance shadow */
 }

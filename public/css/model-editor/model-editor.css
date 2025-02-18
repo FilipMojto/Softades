@@ -11,6 +11,9 @@
 	flex-direction: column;
 	align-items: center;
 	padding: 10px;
+	background-color: #51b3f561;
+	max-height: 100%;
+	overflow: auto;
 }
 
 #tool-panel > *{
@@ -24,7 +27,3 @@
 	margin: 0;
 }
 
-#lal{
-	/* z-index: 30; */
-	background-color: red;
-}

@@ -67,6 +67,7 @@ export const ToolPanel: React.FC<ToolPanelProps> = ({
       <h3>Tools</h3>
       <UseCaseBubble
         id={curId.current}
+        labelText="Use Case"
         x={0}
         y={0}
         width={DEF_WIDTH}
@@ -74,38 +75,49 @@ export const ToolPanel: React.FC<ToolPanelProps> = ({
         onClick={addBubble}
         isTemplate
       ></UseCaseBubble>
+
+      <TemplateConnector
+        id={relationshipUUIDMap.associate}
+        relationship="associate"
+        onClick={addConnector}
+      ></TemplateConnector>
+
       <TemplateConnector
         id={relationshipUUIDMap.include}
-        fromX={0}
-        fromY={60}
-        toX={198}
-        toY={60}
+        // fromX={0}
+        // fromY={60}
+        // toX={198}
+        // toY={60}
         relationship="include"
-        isTemplate
+        // isTemplate
         onClick={addConnector}
+        onClickClass="selected"
       ></TemplateConnector>
       <TemplateConnector
         id={relationshipUUIDMap.extends}
-        fromX={0}
-        fromY={60}
-        toX={198}
-        toY={60}
+        // fromX={0}
+        // fromY={60}
+        // toX={198}
+        // toY={60}
         relationship="extends"
-        isTemplate
+        // isTemplate
         onClick={addConnector}
+        onClickClass="selected"
       ></TemplateConnector>
       <TemplateConnector
         id={relationshipUUIDMap.generalize}
-        fromX={0}
-        fromY={60}
-        toX={198}
-        toY={60}
+        // fromX={0}
+        // fromY={60}
+        // toX={198}
+        // toY={60}
         relationship="generalize"
-        isTemplate
+        // isTemplate
         onClick={addConnector}
+        onClickClass="selected"
       ></TemplateConnector>
       <SystemBoundary
         id={curId.current}
+        title="System Boundary"
         x={0}
         y={0}
         isTemplate

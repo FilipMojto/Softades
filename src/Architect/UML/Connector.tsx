@@ -3,19 +3,19 @@ import { NodeProps } from "./Node";
 import { AnyNode, Element, ElementProps } from "./Element";
 import { v4 as uuidv4 } from "uuid";
 import ConnectorMarkers from "./Marker";
-// import {
-//   // AnyElement,
-//   DEF_WIDTH,
-//   Element,
-//   ElementProps as NodeProps\,
-//   ElementProps,
-// } from "./Element";
-// import { DEF_HEIGHT } from "./UseCaseBubble";
 
-export type Relationship = "include" | "extends" | "generalize";
+
+
+// as const prevents widening the array into string[]
+export const relationships = ["associate", "include", "extends", "generalize"] as const;
+// creating the type like this increases the code maintainability but I dont
+// if as const was not used above some problems with infering the relationships into this type
+// may occur
+export type Relationship = (typeof relationships)[number];
 
 // Generate a mapping of each Relationship type to a unique UUID
 export const relationshipUUIDMap: Record<Relationship, string> = {
+  associate: uuidv4(),
   include: uuidv4(),
   extends: uuidv4(),
   generalize: uuidv4(),
@@ -30,17 +30,20 @@ export const uuidToRelationshipMap: Record<string, Relationship> =
     ])
   );
 
-const getLineStyle = (relationshipType: Relationship) => {
+const getLineStyle = (
+  relationshipType: Relationship,
+  color: string = "black"
+) => {
   // console.log("received", relationshipType);
   switch (relationshipType) {
     case "include":
-      return { stroke: "black", strokeWidth: 2, strokeDasharray: "5,5" }; // Dashed line
     case "extends":
-      return { stroke: "black", strokeWidth: 2, strokeDasharray: "5,5" }; // Dashed line
+      return { stroke: color, strokeWidth: 2, strokeDasharray: "5,5" }; // Dashed line
     case "generalize":
-      return { stroke: "black", strokeWidth: 2 }; // Solid line
+    case "associate":
+      return { stroke: color, strokeWidth: 2 }; // Solid line
     default:
-      return { stroke: "black", strokeWidth: 1 };
+      return { stroke: color, strokeWidth: 1 };
   }
 };
 
@@ -60,16 +63,15 @@ const getMarkerEnd = (relationshipType: Relationship) => {
 const getIntersectionWithBoundary = (
   center: { x: number; y: number },
   direction: { x: number; y: number },
-  nodeX: number, nodeY: number,
-  nodeWidth: number, nodeHeight: number
+  nodeX: number,
+  nodeY: number,
+  nodeWidth: number,
+  nodeHeight: number
 ) => {
   if (direction.x === 0 && direction.y === 0) {
     console.warn("Direction vector is zero, cannot compute intersection.");
     return center;
   }
-  // Calculate the half-width and half-height of the element
-  // const halfWidth = element.width / 2;
-  // const halfHeight = element.height / 2;
 
   // Calculate the intersection with the element's boundaries
   const tx1 = (nodeX - center.x) / direction.x;
@@ -90,22 +92,18 @@ const getIntersectionWithBoundary = (
 
 export interface ConnectorProps {
   id: string;
-  // fromX: number;
-  // fromY: number;
-  // toX: number;
-  // toY: number;
   source: AnyNode;
   target: AnyNode;
-  relationship: "include" | "extends" | "generalize";
+  relationship: Relationship;
 }
 
 export interface TemplateConnectorProps extends ElementProps {
-  fromX: number;
-  fromY: number;
-  toX: number;
-  toY: number;
+  // fromX?: number;
+  // fromY?: number;
+  // toX?: number;
+  // toY?: number;
   relationship: Relationship;
-  isTemplate?: boolean;
+  // isTemplate?: boolean;
 }
 
 export interface ConnectorPathProps {
@@ -126,12 +124,10 @@ export const ConnectorLine: React.FC<ConnectorPathProps> = ({
   const linePath = `M ${fromX} ${fromY} L ${toX} ${toY}`;
 
   return (
-    // <>
     <path
       d={linePath}
       style={getLineStyle(relationshipType)}
       markerEnd={getMarkerEnd(relationshipType)}
-
     />
   );
 };
@@ -156,7 +152,7 @@ export const ConnectorText: React.FC<ConnectorTextProps> = ({
       style={{
         fontSize: "0.8rem",
         fontWeight: "bold",
-        fill: "black"
+        fill: "black",
       }}
     >
       {`<<${relationshipType}>>`}
@@ -164,40 +160,41 @@ export const ConnectorText: React.FC<ConnectorTextProps> = ({
   );
 };
 
-// export const Haha
+export const DEF_FROM_X = 0;
+export const DEF_FROM_Y = 60;
+export const DEF_TO_X = 198;
+export const DEF_TO_Y = 60;
+
 
 export const TemplateConnector: React.FC<TemplateConnectorProps> = ({
   id,
-  fromX,
-  fromY,
-  toX,
-  toY,
+  // fromX,
+  // fromY,
+  // toX,
+  // toY,
   relationship: relationshipType,
-  isTemplate = false,
+  // isTemplate = false,
   onClick = null,
+  onClickClass = null,
 }) => {
-  const linePath = `M ${fromX} ${fromY} L ${toX} ${toY}`;
-  const midX = (fromX + toX) / 2;
-  const midY = (fromY + toY) / 2;
+  // const linePath = `M ${fromX} ${fromY} L ${toX} ${toY}`;
+  const midX = (DEF_FROM_X + DEF_TO_X) / 2;
+  const midY = (DEF_FROM_Y + DEF_TO_Y) / 2;
 
   return (
-    // <path
-    //   d={linePath}
-    //   style={getLineStyle(relationshipType)}
-    //   markerEnd={getMarkerEnd(relationshipType)}
-    // />
-
     <Element
       id={id}
+      className="connector"
+      onClickClass={onClickClass ?? ""}
       style={{
-        width: isTemplate ? "fitContent" : "100%",
+        // width: isTemplate ? "fitContent" : "100%",
+        width: "fitContent",
         height: "100%",
         backgroundColor: "transparent",
         boxShadow: "none",
       }}
-      // mode="clickable"
       onClick={onClick ?? undefined}
-      isTemplate={isTemplate}
+      isTemplate={true}
     >
       <svg
         className="connector"
@@ -207,68 +204,36 @@ export const TemplateConnector: React.FC<TemplateConnectorProps> = ({
           backgroundColor: "transparent",
           zIndex: -1,
         }}
-        viewBox={isTemplate ? "0 0 200 120" : undefined}
-        preserveAspectRatio={isTemplate ? "xMidYMid meet" : "none"}
+        // viewBox={isTemplate ? "0 0 200 120" : undefined}
+        viewBox="0 0 200 120"
+        // preserveAspectRatio={isTemplate ? "xMidYMid meet" : "none"}
+        preserveAspectRatio="xMidYMid meet"
       >
         <ConnectorMarkers></ConnectorMarkers>
-        {/* <defs>
-          <marker
-            id="generalize-arrow"
-            markerWidth="10"
-            markerHeight="10"
-            refX="9"
-            refY="5"
-            orient="auto"
-          >
-            <path d="M0,0 L10,5 L0,10 Z" fill="white" stroke="black" />
-          </marker>
+        <ConnectorLine
+          relationshipType={relationshipType}
+          fromX={DEF_FROM_X}
+          fromY={DEF_FROM_Y}
+          toX={DEF_TO_X}
+          toY={DEF_TO_Y}
+        ></ConnectorLine>
 
-          <marker
-            id="dashed-arrow"
-            markerWidth="10"
-            markerHeight="10"
-            refX="9"
-            refY="5"
-            orient="auto"
-          >
-            <path
-              d="M 0 0 L 10 5 L 0 10"
-              fill="none"
-              stroke="black"
-              strokeWidth="0.85"
-            />
-          </marker>
-        </defs> */}
-
-        {/* <circle cx={fromX} cy={fromY} r="5" fill="green" />
-        <circle cx={toX} cy={toY} r="5" fill="blue" /> */}
-
-        <path
-          d={linePath}
-          style={getLineStyle(relationshipType)}
-          markerEnd={getMarkerEnd(relationshipType)}
-        />
-
-        <text
-          x={midX}
-          y={midY}
-          textAnchor="middle"
-          alignmentBaseline="middle"
-          style={{
-            fontSize: "0.8rem",
-            fontWeight: "bold",
-            fill: "black",
-          }}
-        >
-          {`<<${relationshipType}>>`}
-        </text>
+        {(relationshipType === "include" ||
+          relationshipType === "extends" ||
+          relationshipType === "generalize") && (
+          <ConnectorText
+            relationshipType={relationshipType}
+            midX={midX}
+            midY={midY}
+          />
+        )}
       </svg>
     </Element>
   );
 };
 
 export const Connector: React.FC<ConnectorProps> = ({
-  id,
+  // id,
   source,
   target,
   relationship: relationshipType,
@@ -285,7 +250,7 @@ export const Connector: React.FC<ConnectorProps> = ({
 
   const fromCenter = {
     x: sourceX + sourceWidth / 2,
-    y: sourceY+ sourceHeight / 2,
+    y: sourceY + sourceHeight / 2,
   };
 
   const toCenter = {
@@ -325,16 +290,7 @@ export const Connector: React.FC<ConnectorProps> = ({
   const midX = (fromIntersection.x + toIntersection.x) / 2;
   const midY = (fromIntersection.y + toIntersection.y) / 2;
   console.log("re-rendering connector...");
-  // return (
-  //   <TemplateConnector
-  //     id={id}
-  //     fromX={fromIntersection.x}
-  //     fromY={fromIntersection.y}
-  //     toX={toIntersection.x}
-  //     toY={toIntersection.y}
-  //     relationship={relationshipType}
-  //   ></TemplateConnector>
-  // );
+
   return (
     <>
       <ConnectorLine

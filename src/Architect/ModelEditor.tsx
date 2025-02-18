@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ToolPanel } from "./ToolPanel";
 import { Workspace } from "./Workspace";
+import { Relationship, relationships } from "./UML/Connector";
 import { DEF_HEIGHT, DEF_WIDTH } from "./UML/UseCaseBubble";
 import {
   ConnectorProps,
@@ -174,12 +175,12 @@ export const ModelEditor: React.FC = ({}) => {
           source &&
           target &&
           targetConnRef.current &&
-          ["include", "extends", "generalize"].includes(targetConnRef.current)
+          relationships.includes(targetConnRef.current as Relationship)
         ) {
-          const relationship = targetConnRef.current as
-            | "include"
-            | "extends"
-            | "generalize";
+          const relationship = targetConnRef.current as Relationship;
+            // | "include"
+            // | "extends"
+            // | "generalize";
           setConnectors((prevConnectors) => [
             ...prevConnectors,
             {

@@ -92,16 +92,16 @@ export const Node: React.FC<NodeProps> = ({
     if (!onDrag) return;
     // Detect if the click is within the resizable border area (e.g., bottom-right corner)
     const element = event.currentTarget as HTMLElement;
-    // const rect = element.getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
     
     // Define resize margins (adjust as needed)
-    // const resizeMargin = 10;
+    const resizeMargin = 10;
 
-    // const isResizing =
-    //   resizable &&
-    //   (event.clientX >= rect.right - resizeMargin || event.clientY >= rect.bottom - resizeMargin);
-    // console.log(isResizing);
-    // if (isResizing) return; // Suppress dragging if resizing
+    const isResizing =
+      resizable &&
+      (event.clientX >= rect.right - resizeMargin || event.clientY >= rect.bottom - resizeMargin);
+    console.log(isResizing);
+    if (isResizing) return; // Suppress dragging if resizing
 
     // Ensure dragging starts only when clicking directly on the component itself
     if (event.target !== event.currentTarget) return;

@@ -10,10 +10,7 @@
   box-sizing: border-box;
 }
 
-.element:hover {
-  transform: scale(1.05); /* Slightly enlarge the element */
-  box-shadow: 8px 8px 15px 0px rgba(113, 113, 113, 0.85); /* Enhance shadow */
-}
+
 
 .usecase-bubble {
   z-index: 20;
@@ -34,7 +31,7 @@
 }
 
 .usecase-bubble:hover {
-  background-color: #cce6ff; /* Slightly darker blue on hover */
+  /* background-color: #cce6ff; Slightly darker blue on hover */
   transform: scale(1.02); /* Slight scale-up effect */
   box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
 }
@@ -79,6 +76,7 @@
   background-color: transparent;
   border: none;
   outline: none;
-  max-width: 5em !important;
-
+  max-width: fit-content;
+  text-align: center;
 }
+

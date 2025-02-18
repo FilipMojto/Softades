@@ -10,10 +10,12 @@ export const DEF_Y = 0;
 
 export interface UseCaseBubbleProps extends NodeProps {
   type?: NodeType;
+  labelText?: string;
 }
 
 export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
   type = "UseCaseBubble",
+  labelText = 'Title...',
   id,
   x = DEF_X,
   y = DEF_Y,
@@ -104,7 +106,7 @@ export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
       {/* <label>UC01{id.current}</label> */}
       <textarea
         ref={textareaRef}
-        placeholder="Description..."
+        placeholder={labelText}
         onInput={handleInput}
         style={
           {
