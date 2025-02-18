@@ -10,6 +10,9 @@
   box-sizing: border-box;
 }
 
+/* .element.no-children-events > * { 
+  pointer-events: none;
+} */
 
 
 .usecase-bubble {

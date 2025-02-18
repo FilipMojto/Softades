@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Node, NodeProps, NodeType } from "./Node";
-import { v4 as uuidv4 } from "uuid";
 
 export const DEF_WIDTH = 200;
 export const DEF_HEIGHT = 200;
@@ -44,13 +43,6 @@ export const SystemBoundary: React.FC<SystemBoundaryProps> = ({
       onPositionChange={onPositionChange}
       constraintArea={constraintArea}
       resizable={resizable}
-      style={
-        {
-          // backgroundColor: "transparent",
-          // backgroundColor: "#e6f3ff", /* Light blue background */
-          // border: "1px outset #007acc85", /* Blue border */
-        }
-      }
       onClick={onClick}
     >
       <input placeholder={title} autoComplete="off" name="random-field-123"></input>

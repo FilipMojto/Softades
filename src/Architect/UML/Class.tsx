@@ -1,6 +1,4 @@
-// import { UseCaseBubbleProps } from "./UseCaseBubble";
 import React from "react";
-import { Element, ElementProps } from "./Element";
 import { Node, NodeProps, NodeType } from "./Node";
 
 export const DEF_WIDTH = 100;
@@ -19,7 +17,6 @@ export const Class: React.FC<ClassProps> = ({
   y = DEF_Y,
   width = DEF_WIDTH,
   height = DEF_HEIGHT,
-  // mode = "none",
   onClick = null,
   onDrag = null,
   onPositionChange,

@@ -1,29 +1,12 @@
-import React, { useRef, useState } from "react";
-// import { AnyElement, createElement, Element } from "./UML/Element";
-import { Connector, ConnectorProps } from "./UML/Connector";
+import React, { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-
-import {
-  DEF_HEIGHT,
-  DEF_WIDTH,
-  UseCaseBubble,
-  UseCaseBubbleProps,
-} from "./UML/UseCaseBubble";
-import {
-  Class,
-  DEF_WIDTH as CLS_DEF_WIDTH,
-  DEF_HEIGHT as CLS_DEF_HEIGTH,
-} from "./UML/Class";
 import { NodeProps, NodeRenderer } from "./UML/Node";
-import { AnyNode } from "./UML/Element";
 import ConnectorMarkers from "./UML/Marker";
+import { Connector, ConnectorProps } from "./UML/Connector/Connector";
 
 export interface WorkspaceProps {
   nodes: NodeProps[];
   connectors: ConnectorProps[];
-  // setElements: React.Dispatch<React.SetStateAction<NodeProps[]>>;
-  // setConnectors: React.Dispatch<React.SetStateAction<ConnectorProps[]>>;
-  // onElementClicked: (id: string) => void;
 }
 
 export const Workspace: React.FC<WorkspaceProps> = ({
@@ -39,20 +22,15 @@ export const Workspace: React.FC<WorkspaceProps> = ({
       ref={appRef}
       style={{ height: "100%", position: "relative" }} // Create a stacking context
     >
-      {/* Render elements with a lower z-index */}
-      {/* <div style={{ position: "relative", zIndex: 3 }}> */}
-      
-        {elements.map((el) => (
-          
-          <NodeRenderer
-            key={el.id ? el.id : uuidv4()}
-            x={el.x}
-            constraintArea={appRef as React.RefObject<HTMLElement>}
-            {...el}
-          />
-        ))}
-      {/* </div> */}
-  
+      {elements.map((el) => (
+        <NodeRenderer
+          key={el.id ? el.id : uuidv4()}
+          x={el.x}
+          constraintArea={appRef as React.RefObject<HTMLElement>}
+          {...el}
+        />
+      ))}
+
       {/* Wrap the SVG in a div to control z-index without breaking layout */}
       <div
         style={{
@@ -85,7 +63,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({
             >
               <path d="M0,0 L10,5 L0,10 Z" fill="white" stroke="black" />
             </marker>
-  
+
             <marker
               id="dashed-arrow"
               markerWidth="10"
@@ -103,9 +81,8 @@ export const Workspace: React.FC<WorkspaceProps> = ({
             </marker>
           </defs>
           <ConnectorMarkers></ConnectorMarkers>
-  
+
           {connectors.map((connector) => (
-            
             <Connector key={connector.id} {...connector}></Connector>
           ))}
         </svg>

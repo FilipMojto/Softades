@@ -1,23 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ToolPanel } from "./ToolPanel";
 import { Workspace } from "./Workspace";
-import { Relationship, relationships } from "./UML/Connector";
-import { DEF_HEIGHT, DEF_WIDTH } from "./UML/UseCaseBubble";
+import { Relationship, relationships } from "./UML/Connector/ConnectorBase";
 import {
-  ConnectorProps,
+  // ConnectorProps,
   relationshipUUIDMap,
   uuidToRelationshipMap,
-} from "./UML/Connector";
-import { NodeProps } from "./UML/Node";
+} from "./UML/Connector/ConnectorBase";
+
 import { AnyNode } from "./UML/Element";
 import { v4 as uuidv4 } from "uuid";
+import { ConnectorProps } from "./UML/Connector/Connector";
 
 export const ModelEditor: React.FC = ({}) => {
-  const appRef = useRef<HTMLDivElement>(null);
   const elementIdRef = useRef<string>(uuidv4());
 
-
-  const updateElements = (elements: AnyNode[]) => {
+  const updateConnectors = (elements: AnyNode[]) => {
     setConnectors((prevConnectors) =>
       prevConnectors.map((conn) => {
         const source = elements.find((el) => el.id === conn.source.id);
@@ -32,13 +30,30 @@ export const ModelEditor: React.FC = ({}) => {
     );
   };
 
+  const selectMode = useRef<boolean>(true);
+  const toggleSelectMode = () => {
+    setNodes((prevNodes) => {
+      console.log("toggling mode: ", selectMode.current);
+      const updatedNodes = prevNodes.map((el) => ({
+        ...el,
+        selectMode: selectMode.current,
+      }));
+
+      //toggle the selectMode
+      selectMode.current = selectMode.current ? false : true;
+      // this is probably unnecessary remove as soon as verified
+      // updateConnectors(updatedNodes);
+      return updatedNodes;
+    });
+  };
+
   const handlePositionChange = (id: string, x: number, y: number) => {
     console.log(id, x, y);
     setNodes((prevNodes) => {
       const updatedNodes = prevNodes.map((el) =>
         el.id === id ? { ...el, x, y } : el
       );
-      updateElements(updatedNodes);
+      updateConnectors(updatedNodes);
       return updatedNodes;
     });
   };
@@ -48,7 +63,7 @@ export const ModelEditor: React.FC = ({}) => {
       const updatedNodes = prevNodes.map((el) =>
         el.id === id ? { ...el, width, height } : el
       );
-      updateElements(updatedNodes);
+      updateConnectors(updatedNodes);
       return updatedNodes;
     });
   };
@@ -70,42 +85,9 @@ export const ModelEditor: React.FC = ({}) => {
     ConnectorProps["relationship"] | undefined
   >();
   const [sourceID, setSourceID] = useState<string>("");
-  // const [curConnID, setCurConnID] = useState<number>(5);
 
-  const [nodes, setNodes] = useState<AnyNode[]>([
-    // {
-    //   id: useRef<string>("0"),
-    //   x: 100,
-    //   y: 200,
-    //   width: DEF_WIDTH,
-    //   height: DEF_HEIGHT,
-    //   onDrag: (id: string) => {},
-    //   onClick: (id: string) => onElementClicked(id),
-    //   type: "UseCaseBubble",
-    //   onPositionChange: handlePositionChange,
-    //   onDimensionChange: handleDimensionChange,
-    // },
-    // {
-    //   id: useRef<string>("1"),
-    //   x: 100,
-    //   y: 300,
-    //   width: DEF_WIDTH,
-    //   height: DEF_HEIGHT,
-    //   onDrag: () => {},
-    //   onClick: (id: string) => onElementClicked(id),
-    //   type: "UseCaseBubble",
-    //   onPositionChange: handlePositionChange,
-    //   onDimensionChange: handleDimensionChange,
-    // },
-  ]);
-  const [connectors, setConnectors] = useState<ConnectorProps[]>([
-    // {
-    //   id: "2",
-    //   relationship: "include",
-    //   source: nodes[0],
-    //   target: nodes[1],
-    // },
-  ]);
+  const [nodes, setNodes] = useState<AnyNode[]>([]);
+  const [connectors, setConnectors] = useState<ConnectorProps[]>([]);
 
   // Sync refs with state
   useEffect(() => {
@@ -115,10 +97,6 @@ export const ModelEditor: React.FC = ({}) => {
   useEffect(() => {
     targetConnRef.current = targetConn;
   }, [targetConn]);
-
-  // useEffect(() => {
-  //   curConnIDRef.current = curConnID;
-  // }, [curConnID]);
 
   useEffect(() => {
     sourceIDRef.current = sourceID;
@@ -133,6 +111,9 @@ export const ModelEditor: React.FC = ({}) => {
   }, [connectors]);
 
   const addConnector = (id: string) => {
+    // toggling the select mode of each node
+    toggleSelectMode();
+
     console.log("add connector clicked!:", id);
     setConnTemplateClicked(true); // Update state
     setTargetConn(uuidToRelationshipMap[id]);
@@ -178,9 +159,7 @@ export const ModelEditor: React.FC = ({}) => {
           relationships.includes(targetConnRef.current as Relationship)
         ) {
           const relationship = targetConnRef.current as Relationship;
-            // | "include"
-            // | "extends"
-            // | "generalize";
+
           setConnectors((prevConnectors) => [
             ...prevConnectors,
             {
@@ -195,8 +174,10 @@ export const ModelEditor: React.FC = ({}) => {
           setConnTemplateClicked(false);
           setTargetConn(undefined);
           curConnIDRef.current = curConnIDRef.current + 1;
-          // setCurConnID((prev) => prev + 1);
           setSourceID("");
+
+          // we turn off the select mode
+          toggleSelectMode();
         } else {
           console.error(
             "500: Internal server error, source or target element not found."
@@ -211,7 +192,7 @@ export const ModelEditor: React.FC = ({}) => {
   return (
     <div id="model-editor" className="row">
       <ToolPanel
-      curId={elementIdRef}
+        curId={elementIdRef}
         addConnector={addConnector}
         setElements={setNodes}
         onElementClicked={onElementClicked}

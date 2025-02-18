@@ -1,14 +1,10 @@
 import React from "react";
 import { UseCaseBubble, DEF_WIDTH, DEF_HEIGHT } from "./UML/UseCaseBubble";
-import {
-  Connector,
-  ConnectorProps,
-  relationshipUUIDMap,
-  TemplateConnector,
-} from "./UML/Connector";
+import { relationshipUUIDMap } from "./UML/Connector/ConnectorBase";
 import { NodeProps } from "./UML/Node";
 import { SystemBoundary } from "./UML/SystemBoundary";
 import { v4 as uuidv4 } from "uuid";
+import { TemplateConnector } from "./UML/Connector/TemplateConnector";
 
 export interface ToolPanelProps {
   setElements: React.Dispatch<React.SetStateAction<NodeProps[]>>;
@@ -84,34 +80,19 @@ export const ToolPanel: React.FC<ToolPanelProps> = ({
 
       <TemplateConnector
         id={relationshipUUIDMap.include}
-        // fromX={0}
-        // fromY={60}
-        // toX={198}
-        // toY={60}
         relationship="include"
-        // isTemplate
         onClick={addConnector}
         onClickClass="selected"
       ></TemplateConnector>
       <TemplateConnector
         id={relationshipUUIDMap.extends}
-        // fromX={0}
-        // fromY={60}
-        // toX={198}
-        // toY={60}
         relationship="extends"
-        // isTemplate
         onClick={addConnector}
         onClickClass="selected"
       ></TemplateConnector>
       <TemplateConnector
         id={relationshipUUIDMap.generalize}
-        // fromX={0}
-        // fromY={60}
-        // toX={198}
-        // toY={60}
         relationship="generalize"
-        // isTemplate
         onClick={addConnector}
         onClickClass="selected"
       ></TemplateConnector>

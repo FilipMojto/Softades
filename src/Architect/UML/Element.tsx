@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { UseCaseBubbleProps } from "./UseCaseBubble";
-import { ClassProps, Class } from "./Class";
+import { ClassProps } from "./Class";
 import { SystemBoundaryProps } from "./SystemBoundary";
 
 export interface ElementProps {
   id: string;
   className?: string;
-  // mode?: Mode;
-  // action?: (id: string) => void;
   onDrag?: (id: string) => void;
   onClick?: (id: string) => void;
   onClickClass?: string;
@@ -18,14 +16,13 @@ export interface ElementProps {
   onDimensionChange?: (id: string, width: number, height: number) => void;
   isTemplate?: boolean;
   onMouseDown?: (event: React.MouseEvent) => void;
+  // noChildrenEvents?: boolean;
 }
 
 export const Element: React.FC<ElementProps> = ({
   id,
   className = null,
   onClickClass = null,
-  // mode = "none",
-  // action = null,
   onClick = null,
   onDrag = null,
   children = null,
@@ -35,6 +32,7 @@ export const Element: React.FC<ElementProps> = ({
   onPositionChange = null,
   onMouseDown = null,
   isTemplate = false,
+  // noChildrenEvents = false,
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 

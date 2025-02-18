@@ -1,9 +1,12 @@
-
-.template > *{
-	pointer-events: none;
+.template > * {
+  pointer-events: none;
 }
 
-.template:hover{
-	transform: scale(1.05); /* Slightly enlarge the element */
+.template:hover {
+  transform: scale(1.05); /* Slightly enlarge the element */
   box-shadow: 8px 8px 15px 0px rgba(113, 113, 113, 0.85); /* Enhance shadow */
+}
+
+.select > * {
+  pointer-events: none;
 }

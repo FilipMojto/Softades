@@ -1,7 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Element, ElementProps } from "./Element";
+import React, { useRef } from "react";
 import { Node, NodeProps, NodeType } from "./Node";
-import { v4 as uuidv4 } from "uuid";
 
 export const DEF_WIDTH = 200;
 export const DEF_HEIGHT = 100;
@@ -15,7 +13,7 @@ export interface UseCaseBubbleProps extends NodeProps {
 
 export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
   type = "UseCaseBubble",
-  labelText = 'Title...',
+  labelText = "Title...",
   id,
   x = DEF_X,
   y = DEF_Y,
@@ -24,15 +22,13 @@ export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
   style,
   onClick = null,
   onDrag = null,
-  // mode,
-  // action = null,
   onPositionChange,
   onDimensionChange,
   constraintArea: parentRef = null,
   isTemplate: isIcon = false,
+  selectMode = false,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [heightState, setHeight] = useState(`${height}px`); // Initial height
 
   const handleInput = () => {
     if (!textareaRef.current) return;
@@ -46,14 +42,9 @@ export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
       parentComputedStyle?.paddingBottom ?? "0"
     );
     const computedStyle = window.getComputedStyle(textarea);
-    console.log("height before auto:", parseFloat(computedStyle.height));
+
     // Reset height before measuring
     textarea.style.height = "auto";
-    console.log("height after auto:", parseFloat(computedStyle.height));
-
-    // Get computed padding from the TEXTAREA itself (not the parent)
-    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
-    const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
 
     // Get line height
     const lineHeight = parseFloat(computedStyle.lineHeight); // Default fallback
@@ -75,13 +66,11 @@ export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
     console.log("totalHeight:", newHeight + labelHeight);
 
     // Ensure layout updates correctly (React state update)
-    // requestAnimationFrame(() => {                       // 30 is a mystery number
     onDimensionChange?.(
       id,
       width,
       newHeight + labelHeight + parentPaddingBottom + parentPaddingTop
     );
-    // });
   };
 
   return (
@@ -92,8 +81,6 @@ export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
       y={y}
       width={width}
       height={height}
-      // mode={mode}
-      // action={action ?? undefined}
       onClick={onClick ?? undefined}
       onDrag={onDrag ?? undefined}
       onPositionChange={onPositionChange}
@@ -102,18 +89,12 @@ export const UseCaseBubble: React.FC<UseCaseBubbleProps> = ({
       style={{ ...style, display: "flex", flexDirection: "column" }}
       className="usecase-bubble"
       isTemplate={isIcon}
+      selectMode={selectMode}
     >
-      {/* <label>UC01{id.current}</label> */}
       <textarea
         ref={textareaRef}
         placeholder={labelText}
         onInput={handleInput}
-        style={
-          {
-            // resize: "none",
-            // overflow: "hidden",
-          }
-        }
       />
     </Node>
   );
